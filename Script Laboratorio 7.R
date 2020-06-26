@@ -1,4 +1,4 @@
-###########################
+ ###########################
 ###                     ###
 ###   Laboratorio 07    ###
 ###                     ###
@@ -148,34 +148,33 @@ y.10 = vector("numeric")
 y.100 = vector("numeric")
 y.1000 = vector("numeric")
 
-n =30
-p = 0.3
+size =30
+prob = 0.3
+p= 0.3
+n=10
 
 rate = 1000
 for (i in 1:rate){
-      x = rbinom(10,size= n, prob= p)
+      x = rbinom(10,size= size, prob= prob)
       y.10[i]=sum(x)
     
 }
-rm(x)
-par(mfrow=c(1,1),cex=0.7)
-N=10
-n=30
+
+
 hist(y.10,freq=F,main=expression(n==10),
      col="darkblue")
-curve(dnorm(x,mean=N*n*p, sd = sqrt(n*p*(1-p)*N),lwd=3, col="magenta", lty=2)
+curve(dnorm(x, mean=n*p*N, sd = sqrt(n*p*(1-p)*N)), col="red", add=TRUE)
 
 
-curve(dnorm(x, mean=N*n*p, sd = sqrt(n*p*(1-p)*N),lwd=3,
+hist(y.10,freq=F,main=expression(n==10),
+     col="darkblue")
+#BIN(n=30,p=0.3) = sumaron 30 BIN(n=1,p=0.3)
+curve(dbinom(x,size = n*size,prob = prob),lwd=3,
+      col="orange",lty=1,add=TRUE)
+curve(dnorm(x,mean=n*size*prob,sd=sqrt(n*size*prob*(1-prob))),lwd=3,
       col="magenta",lty=2,add=TRUE)
 
 
-
-
-
-
-
-
-
+5+6
 
 
