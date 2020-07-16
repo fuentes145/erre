@@ -1,0 +1,119 @@
+fitdistr                 package:MASS                  R Documentation
+
+_M_a_x_i_m_u_m-_l_i_k_e_l_i_h_o_o_d _F_i_t_t_i_n_g _o_f _U_n_i_v_a_r_i_a_t_e _D_i_s_t_r_i_b_u_t_i_o_n_s
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     Maximum-likelihood fitting of univariate distributions, allowing
+     parameters to be held fixed if desired.
+
+_U_s_a_g_e:
+
+     fitdistr(x, densfun, start, ...)
+     
+_A_r_g_u_m_e_n_t_s:
+
+       x: A numeric vector of length at least one containing only
+          finite values.
+
+ densfun: Either a character string or a function returning a density
+          evaluated at its first argument.
+
+          Distributions ‘"beta"’, ‘"cauchy"’, ‘"chi-squared"’,
+          ‘"exponential"’, ‘"gamma"’, ‘"geometric"’, ‘"log-normal"’,
+          ‘"lognormal"’, ‘"logistic"’, ‘"negative binomial"’,
+          ‘"normal"’, ‘"Poisson"’, ‘"t"’ and ‘"weibull"’ are
+          recognised, case being ignored.
+
+   start: A named list giving the parameters to be optimized with
+          initial values.  This can be omitted for some of the named
+          distributions and must be for others (see Details).
+
+     ...: Additional parameters, either for ‘densfun’ or for ‘optim’.
+          In particular, it can be used to specify bounds via ‘lower’
+          or ‘upper’ or both.  If arguments of ‘densfun’ (or the
+          density function corresponding to a character-string
+          specification) are included they will be held fixed.
+
+_D_e_t_a_i_l_s:
+
+     For the Normal, log-Normal, geometric, exponential and Poisson
+     distributions the closed-form MLEs (and exact standard errors) are
+     used, and ‘start’ should not be supplied.
+
+     For all other distributions, direct optimization of the
+     log-likelihood is performed using ‘optim’.  The estimated standard
+     errors are taken from the observed information matrix, calculated
+     by a numerical approximation.  For one-dimensional problems the
+     Nelder-Mead method is used and for multi-dimensional problems the
+     BFGS method, unless arguments named ‘lower’ or ‘upper’ are
+     supplied (when ‘L-BFGS-B’ is used) or ‘method’ is supplied
+     explicitly.
+
+     For the ‘"t"’ named distribution the density is taken to be the
+     location-scale family with location ‘m’ and scale ‘s’.
+
+     For the following named distributions, reasonable starting values
+     will be computed if ‘start’ is omitted or only partially
+     specified: ‘"cauchy"’, ‘"gamma"’, ‘"logistic"’, ‘"negative
+     binomial"’ (parametrized by ‘mu’ and ‘size’), ‘"t"’ and
+     ‘"weibull"’.  Note that these starting values may not be good
+     enough if the fit is poor: in particular they are not resistant to
+     outliers unless the fitted distribution is long-tailed.
+
+     There are ‘print’, ‘coef’, ‘vcov’ and ‘logLik’ methods for class
+     ‘"fitdistr"’.
+
+_V_a_l_u_e:
+
+     An object of class ‘"fitdistr"’, a list with four components,
+
+estimate: the parameter estimates,
+
+      sd: the estimated standard errors,
+
+    vcov: the estimated variance-covariance matrix, and
+
+  loglik: the log-likelihood.
+
+_N_o_t_e:
+
+     Numerical optimization cannot work miracles: please note the
+     comments in ‘optim’ on scaling data.  If the fitted parameters are
+     far away from one, consider re-fitting specifying the control
+     parameter ‘parscale’.
+
+_R_e_f_e_r_e_n_c_e_s:
+
+     Venables, W. N. and Ripley, B. D. (2002) _Modern Applied
+     Statistics with S._ Fourth edition.  Springer.
+
+_E_x_a_m_p_l_e_s:
+
+     ## avoid spurious accuracy
+     op <- options(digits = 3)
+     set.seed(123)
+     x <- rgamma(100, shape = 5, rate = 0.1)
+     fitdistr(x, "gamma")
+     ## now do this directly with more control.
+     fitdistr(x, dgamma, list(shape = 1, rate = 0.1), lower = 0.001)
+     
+     set.seed(123)
+     x2 <- rt(250, df = 9)
+     fitdistr(x2, "t", df = 9)
+     ## allow df to vary: not a very good idea!
+     fitdistr(x2, "t")
+     ## now do fixed-df fit directly with more control.
+     mydt <- function(x, m, s, df) dt((x-m)/s, df)/s
+     fitdistr(x2, mydt, list(m = 0, s = 1), df = 9, lower = c(-Inf, 0))
+     
+     set.seed(123)
+     x3 <- rweibull(100, shape = 4, scale = 100)
+     fitdistr(x3, "weibull")
+     
+     set.seed(123)
+     x4 <- rnegbin(500, mu = 5, theta = 4)
+     fitdistr(x4, "Negative Binomial")
+     options(op)
+     
+
